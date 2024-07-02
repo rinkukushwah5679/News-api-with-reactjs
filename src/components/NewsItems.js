@@ -11,7 +11,7 @@ export class NewsItems extends Component {
           <div className="card-body">
             <h5 className="card-title">{title.slice(0, 40)}{(title.length > 40) ? '...' : ''}</h5>
             <p className="card-text">{description}...</p>
-            <a href={newsUrl} className="btn btn-sm btn-primary" target='_blank'>Details</a>
+            <a rel="noreferrer" href={newsUrl} className="btn btn-sm btn-primary" target='_blank'>Details</a>
           </div>
         </div>
       </div>
