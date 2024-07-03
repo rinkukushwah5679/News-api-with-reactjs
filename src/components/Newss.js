@@ -46,7 +46,7 @@ export class Newss extends Component {
 
   handelPreClick = async () =>{
     this.setState({ isLoading: true})
-    await fetch(`https://newsapi.org/v2/top-headlines?country=in&apiKey=${NEWS_API_KEY}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`)
+    await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${NEWS_API_KEY}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok ' + response.statusText);
@@ -66,7 +66,7 @@ export class Newss extends Component {
     }
     else{
       this.setState({ isLoading: true})
-      await fetch(`https://newsapi.org/v2/top-headlines?country=in&apiKey=${NEWS_API_KEY}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`)
+      await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${NEWS_API_KEY}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok ' + response.statusText);
