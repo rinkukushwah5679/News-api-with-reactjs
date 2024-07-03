@@ -2,8 +2,21 @@ import React, { Component } from 'react'
 import NewsItems from './NewsItems'
 import { NEWS_API_KEY } from '../config';
 import Spinner from './Spinner'
+import PropTypes from 'prop-types';
 
 export class Newss extends Component {
+
+  static propTypes = {
+    country: PropTypes.string.isRequired,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
+  };
+
+  static defaultProps = {
+    country: 'in',
+    category: 'general',
+    pageSize: 8,
+  };
   
   constructor(){
     super()
@@ -16,7 +29,7 @@ export class Newss extends Component {
   }
 
   async componentDidMount() {
-    await fetch(`https://newsapi.org/v2/top-headlines?country=in&apiKey=${NEWS_API_KEY}&page=1&pageSize=${this.props.pageSize}`)
+    await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${NEWS_API_KEY}&page=1&pageSize=${this.props.pageSize}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok ' + response.statusText);
