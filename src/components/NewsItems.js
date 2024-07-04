@@ -14,7 +14,7 @@ export class NewsItems extends Component {
           <div className="card-body">
             <h5 className="card-title">{title.slice(0, 40)}{(title.length > 40) ? '...' : ''}</h5>
             <p className="card-text">{description}...</p>
-            <p className="card-text"><small className="text-muted"><b>By:-</b> {author?author:"Unknown"}, on {new Date(data).toGMTString()}</small></p>
+            <p className="card-text"><small className="text-danger"><b>By:-</b> {author?author:"Unknown"}, on {new Date(data).toGMTString()}</small></p>
             <a rel="noreferrer" href={newsUrl} className="btn btn-sm btn-primary" target='_blank'>Details</a>
           </div>
         </div>
