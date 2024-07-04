@@ -98,7 +98,7 @@ export class Newss extends Component {
         <div className='row'>
           {this.state.articles.map((element) => {
             return <div key={element.url} className='col-md-3 my-1'>
-              <NewsItems title= {element.title?element.title: ""} description={element.description?element.description.slice(0, 88):""} imageUrl={element.urlToImage?element.urlToImage:"https://blog.roboflow.com/content/images/size/w1200/2023/03/launch-new-api-cli.jpg"} newsUrl={element.url}/>
+              <NewsItems title= {element.title?element.title: ""} description={element.description?element.description.slice(0, 88):""} imageUrl={element.urlToImage?element.urlToImage:"https://blog.roboflow.com/content/images/size/w1200/2023/03/launch-new-api-cli.jpg"} newsUrl={element.url} author={element.author} data={element.publishedAt} source={element.source.name}/>
             </div>
           })}
         </div>
