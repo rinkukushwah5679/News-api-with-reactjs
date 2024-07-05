@@ -30,6 +30,7 @@ export class Newss extends Component {
       isLoading: false,
       page: 1,
       totalResults: 0,
+      showScrollToTop: false,
     };
     document.title = `${this.capitalizeFirstLetter(this.props.category)} - NewsMonkey`;
   }
@@ -61,7 +62,24 @@ export class Newss extends Component {
 
   async componentDidMount() {
     this.updateNews();
+    window.addEventListener('scroll', this.toggleScrollToTopButton);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.toggleScrollToTopButton);
+  }
+
+  toggleScrollToTopButton = () => {
+    if (window.pageYOffset > 300) {
+      this.setState({ showScrollToTop: true });
+    } else {
+      this.setState({ showScrollToTop: false });
+    }
+  };
+
+  scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   fetchMoreData = async () => {
     this.setState({
@@ -103,7 +121,7 @@ export class Newss extends Component {
   // };
 
   render() {
-    const { error, isLoading, articles, totalResults } = this.state;
+    const { error, isLoading, articles, totalResults, showScrollToTop } = this.state;
 
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -141,6 +159,25 @@ export class Newss extends Component {
           <button disabled={this.state.page <= 1} type="button" className="btn btn-info" onClick={this.handelPreClick}> &larr; Previous</button>
           <button disabled={this.state.page >= Math.ceil(this.state.totalResults/this.props.pageSize)} type="button" className="btn btn-info" onClick={this.handelNextClick}>Next &rarr; </button>
         </div>*/}
+        {showScrollToTop && (
+          <button
+            onClick={this.scrollToTop}
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              backgroundColor: 'blue',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              padding: '10px 15px',
+              cursor: 'pointer',
+              zIndex: 1000,
+            }}
+          >
+            ↑
+          </button>
+        )}
       </>
     );
   }
