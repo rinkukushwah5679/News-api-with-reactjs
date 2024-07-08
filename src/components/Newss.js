@@ -36,10 +36,12 @@ export class Newss extends Component {
   }
 
   async updateNews() {
+    this.props.setProgress(10);
     this.setState({ isLoading: true });
     const { country, category, pageSize } = this.props;
     const { page } = this.state;
     const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${NEWS_API_KEY}&page=${page}&pageSize=${pageSize}`;
+    this.props.setProgress(10);
 
     try {
       const response = await fetch(url);
@@ -47,11 +49,13 @@ export class Newss extends Component {
         throw new Error('Network response was not ok ' + response.statusText);
       }
       const data = await response.json();
+      this.props.setProgress(50);
       this.setState({
         articles: data.articles,
         isLoading: false,
         totalResults: data.totalResults,
       });
+      this.props.setProgress(100);
     } catch (error) {
       this.setState({
         error,
