@@ -10,12 +10,14 @@ export class Newss extends Component {
     country: PropTypes.string.isRequired,
     pageSize: PropTypes.number,
     category: PropTypes.string,
+    setProgress: PropTypes.func,
   };
 
   static defaultProps = {
     country: 'in',
     category: 'general',
     pageSize: 8,
+    setProgress: () => {},
   };
 
   capitalizeFirstLetter = (string) => {
@@ -41,7 +43,7 @@ export class Newss extends Component {
     const { country, category, pageSize } = this.props;
     const { page } = this.state;
     const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${NEWS_API_KEY}&page=${page}&pageSize=${pageSize}`;
-    this.props.setProgress(10);
+    this.props.setProgress(30);
 
     try {
       const response = await fetch(url);
@@ -49,7 +51,7 @@ export class Newss extends Component {
         throw new Error('Network response was not ok ' + response.statusText);
       }
       const data = await response.json();
-      this.props.setProgress(50);
+      this.props.setProgress(70);
       this.setState({
         articles: data.articles,
         isLoading: false,
@@ -86,43 +88,31 @@ export class Newss extends Component {
   };
 
   fetchMoreData = async () => {
-    this.setState({
-      page: this.state.page + 1,
-    });
-    const { country, category, pageSize } = this.props;
-    const { page } = this.state;
-    const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${NEWS_API_KEY}&page=${page}&pageSize=${pageSize}`;
+    this.setState(
+      (prevState) => ({ page: prevState.page + 1 }),
+      async () => {
+        const { country, category, pageSize } = this.props;
+        const { page } = this.state;
+        const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${NEWS_API_KEY}&page=${page}&pageSize=${pageSize}`;
 
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }
+          const data = await response.json();
+          this.setState({
+            articles: this.state.articles.concat(data.articles),
+            totalResults: data.totalResults,
+          });
+        } catch (error) {
+          this.setState({
+            error,
+          });
+        }
       }
-      const data = await response.json();
-      this.setState({
-        articles: this.state.articles.concat(data.articles),
-        totalResults: data.totalResults,
-      });
-    } catch (error) {
-      this.setState({
-        error,
-      });
-    }
+    );
   };
-
-  // handelPreClick = async () => {
-  //   this.setState(
-  //     (state) => ({ page: state.page - 1 }),
-  //     this.updateNews
-  //   );
-  // };
-
-  // handelNextClick = async () => {
-  //   this.setState(
-  //     (state) => ({ page: state.page + 1 }),
-  //     this.updateNews
-  //   );
-  // };
 
   render() {
     const { error, isLoading, articles, totalResults, showScrollToTop } = this.state;
@@ -143,8 +133,8 @@ export class Newss extends Component {
         >
           <div className="container">
             <div className="row">
-              {articles.map((element) => (
-                <div key={element.url} className="col-md-4 my-1">
+              {articles.map((element, index) => (
+                <div key={`${element.url}-${index}`} className="col-md-4 my-1">
                   <NewsItems 
                     title={element.title || ""} 
                     description={element.description ? element.description.slice(0, 88) : ""} 
@@ -159,10 +149,6 @@ export class Newss extends Component {
             </div>
           </div>
         </InfiniteScroll>
-        {/*<div className="container d-flex justify-content-between my-2">
-          <button disabled={this.state.page <= 1} type="button" className="btn btn-info" onClick={this.handelPreClick}> &larr; Previous</button>
-          <button disabled={this.state.page >= Math.ceil(this.state.totalResults/this.props.pageSize)} type="button" className="btn btn-info" onClick={this.handelNextClick}>Next &rarr; </button>
-        </div>*/}
         {showScrollToTop && (
           <button
             onClick={this.scrollToTop}
