@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NewsItems from './NewsItems';
-import { NEWS_API_KEY } from '../config';
+import { NEWS_API_KEY } from './../config';
 import Spinner from './Spinner';
 import PropTypes from 'prop-types';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,7 +14,7 @@ export class Newss extends Component {
   };
 
   static defaultProps = {
-    country: 'in',
+    country: 'us',
     category: 'general',
     pageSize: 8,
     setProgress: () => {},
